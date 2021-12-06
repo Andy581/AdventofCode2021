@@ -54,7 +54,41 @@ def boardPrint(board):
         print(row)
     print("new board")
 
-
 print(part1())
 
 
+# PART 2 ############################################################
+
+def part2() -> int: 
+    boards = []
+    matrix = []
+    hitZero = False
+    with open("day4.txt", 'r') as f:
+        line = f.readline()[0:-1]
+        numbers = line.split(",")
+        numbers = [int(x) for x in numbers]
+        for line in f:
+            if not line.strip():
+                continue
+            line = line[0:-1]
+            row = line.split(' ')
+            row = list(filter(None, row))  
+            row = [int(x) for x in row] 
+            matrix.append(row)
+            if len(matrix) == 5:
+                boards.append(matrix)
+                matrix = [] 
+        for num in numbers:
+            if num == 0:
+                hitZero = True
+            for board in boards:
+                for row in board:
+                    if num in row:
+                        row[row.index(num)] = -num
+                if(checkBingo(board, hitZero)):
+                    if(len(boards) != 1):
+                        boards = [x for x in boards if x != board] 
+                    else:
+                        return sumOfBoard(boards[0]) * num
+                        
+print(part2())
